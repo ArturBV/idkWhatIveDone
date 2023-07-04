@@ -33,13 +33,14 @@ def game_cycle():
   result = 0
   res_max = 1000000
   timer = 0.0
-  imu0 = imu.IMU()
+
+  try:
+  imu0 = imu.IMU() # idk why but imu is undefined somehow. 
+  # It works in simulation except local machine
   
   prev = time.ticks_ms()
   while timer // 1000 < 15:
-    
-    # for i in range(1, 3):
-      # result += abs(int(imu0.acceleration[i] * 10))
+
     result += abs(int(imu0.acceleration[1])) * 10
     lcd.fill(BaseColor)
     lcd.print(result % res_max, 0, ScrCenter[1], White)
@@ -50,7 +51,11 @@ def game_cycle():
     lcd.print(15 - int(timer // 1000), ScrCenter[0] - 10, 0, White)
     prev = cur
     wait_ms(200)
-  
+  except NameError:
+    lcd.fill(BaseColor)
+    lcd.print("Exception!", 0, ScrCenter[1], White)
+    wait(1)
+
   return result % res_max
 
 
