@@ -1,6 +1,8 @@
 from m5stack import *
 from m5ui import *
 from uiflow import *
+import imu
+
 
 setScreenColor(0x111111)
 
@@ -35,22 +37,20 @@ def game_cycle():
   timer = 0.0
 
   try:
-  imu0 = imu.IMU() # idk why but imu is undefined somehow. 
-  # It works in simulation except local machine
-  
-  prev = time.ticks_ms()
-  while timer // 1000 < 15:
+    imu0 = imu.IMU()
 
-    result += abs(int(imu0.acceleration[1])) * 10
-    lcd.fill(BaseColor)
-    lcd.print(result % res_max, 0, ScrCenter[1], White)
-    
-    cur = time.ticks_ms()
-    timer += (cur - prev) 
-    
-    lcd.print(15 - int(timer // 1000), ScrCenter[0] - 10, 0, White)
-    prev = cur
-    wait_ms(200)
+    prev = time.ticks_ms()
+    while timer // 1000 < 15:
+      result += abs(int(imu0.acceleration[1])) * 10
+      lcd.fill(BaseColor)
+      lcd.print(result % res_max, 0, ScrCenter[1], White)
+
+      cur = time.ticks_ms()
+      timer += (cur - prev) 
+
+      lcd.print(15 - int(timer // 1000), ScrCenter[0] - 10, 0, White)
+      prev = cur
+      wait_ms(200)
   except NameError:
     lcd.fill(BaseColor)
     lcd.print("Exception!", 0, ScrCenter[1], White)
